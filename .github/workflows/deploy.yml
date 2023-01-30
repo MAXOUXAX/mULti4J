@@ -28,3 +28,5 @@ jobs:
         mvn -s $GITHUB_WORKSPACE/.github/workflows/settings.xml --batch-mode deploy
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        USERNAME: ${{ secrets.USERNAME }}
+        TOKEN: ${{ secrets.TOKEN }}
