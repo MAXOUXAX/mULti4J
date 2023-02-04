@@ -8,10 +8,10 @@ public class RestoCrous {
     String menuRu;
 
     public RestoCrous(String nomRu, String imageRu, String dateRu, String menuRu) {
-        NomRu = nomRu;
-        ImageRu = imageRu;
-        DateRu = dateRu;
-        MenuRu = menuRu;
+        this.nomRu = nomRu;
+        this.imageRu = imageRu;
+        this.dateRu = dateRu;
+        this.menuRu = menuRu;
     }
 
     public String getNomRu() {
