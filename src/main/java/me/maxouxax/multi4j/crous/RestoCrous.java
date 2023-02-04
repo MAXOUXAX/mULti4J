@@ -15,18 +15,18 @@ public class RestoCrous {
     }
 
     public String getNomRu() {
-        return NomRu;
+        return this.nomRu;
     }
 
     public String getImageRu() {
-        return ImageRu;
+        return this.imageRu;
     }
 
     public String getDateRu() {
-        return DateRu;
+        return this.dateRu;
     }
 
     public String getMenuRu() {
-        return MenuRu;
+        return this.menuRu;
     }
 }
