@@ -2,10 +2,10 @@ package me.maxouxax.multi4j.crous;
 
 public class RestoCrous {
 
-    String NomRu;
-    String ImageRu;
-    String DateRu;
-    String MenuRu;
+    String nomRu;
+    String imageRu;
+    String dateRu;
+    String menuRu;
 
     public RestoCrous(String nomRu, String imageRu, String dateRu, String menuRu) {
         NomRu = nomRu;
