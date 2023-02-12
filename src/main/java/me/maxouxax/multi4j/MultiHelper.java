@@ -76,47 +76,47 @@ public class MultiHelper {
         JSONObject response = mc.makeGQLRequest(jsonObject);
 
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
-        Date aujd = new Date();
-        String date = s.format(aujd);
+        Date today = new Date();
+        String date = s.format(today);
         int findCrous = 0;
 
         //Chercher Crous
-        JSONArray recherche = response.getJSONObject("data").getJSONArray("restos");
-        for (int i = 0; i < recherche.length(); i++) {
-            if (recherche.getJSONObject(i).getString("title").equals(nomRu)) {
+        JSONArray restosArray = response.getJSONObject("data").getJSONArray("restos");
+        for (int i = 0; i < restosArray.length(); i++) {
+            if (restosArray.getJSONObject(i).getString("title").equals(nomRu)) {
                 findCrous = i;
                 break;
             }
         }
 
-        JSONObject suite = response.getJSONObject("data").getJSONArray("restos").getJSONObject(findCrous);
-        String titleRu = suite.get("title").toString();
-        String imageRu = suite.get("thumbnail_url").toString();
-        JSONArray tjrlarecherche = suite.getJSONArray("menus");
+        JSONObject restosObject = response.getJSONObject("data").getJSONArray("restos").getJSONObject(findCrous);
+        String titleRu = restosObject.get("title").toString();
+        String imageRu = restosObject.get("thumbnail_url").toString();
+        JSONArray menuArray = restosObject.getJSONArray("menus");
         int findDate = 0;
         String dateRu= "";
         
-        //Chercher aujd
-        for (int i = 0; i < tjrlarecherche.length(); i++) {
-            if (tjrlarecherche.getJSONObject(i).getString("date").equals(date)) {
-                dateRu = tjrlarecherche.getJSONObject(i).getString("date");
+        //Chercher today
+        for (int i = 0; i < menuArray.length(); i++) {
+            if (menuArray.getJSONObject(i).getString("date").equals(date)) {
+                dateRu = menuArray.getJSONObject(i).getString("date");
                 findDate = i;
                 break;
             }
         }
         
-        JSONObject encoreouais = suite.getJSONArray("menus").getJSONObject(findDate);
+        JSONObject menuObject = restosObject.getJSONArray("menus").getJSONObject(findDate);
 
         //Recuperer Repas
-        JSONObject tjrtjr = encoreouais.getJSONArray("meal").getJSONObject(0);
-        JSONObject tjrtjrr = tjrtjr.getJSONArray("foodcategory").getJSONObject(0);
-        JSONArray tjrtjrrarray = tjrtjrr.getJSONArray("dishes");
-        String sli = "";
-        for (int i = 0; i < tjrtjrrarray.length(); i++) {
-            String temp = tjrtjrrarray.getJSONObject(i).getString("name");
-            sli += temp+" - ";
+        JSONObject mealObject = menuObject.getJSONArray("meal").getJSONObject(0);
+        JSONObject foodCategoryObject = mealObject.getJSONArray("foodcategory").getJSONObject(0);
+        JSONArray dishesArray = foodCategoryObject.getJSONArray("dishes");
+        String str = "";
+        for (int i = 0; i < dishesArray.length(); i++) {
+            String temp = dishesArray.getJSONObject(i).getString("name");
+            str += temp+" - ";
         }
-        String menuRu = sli.substring(0, sli.length()-2);
+        String menuRu = str.substring(0, str.length()-2);
         
         return (new RestoCrous(titleRu, imageRu, dateRu, menuRu));
     }

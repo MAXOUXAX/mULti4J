@@ -2,6 +2,7 @@ package me.maxouxax.multi4j;
 
 import me.maxouxax.multi4j.crous.RestoCrous;
 import me.maxouxax.multi4j.exceptions.MultiLoginException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,15 +12,13 @@ public class CrousTest {
 
     @Test
     public void testCrous() throws MultiLoginException, IOException, URISyntaxException, InterruptedException {
-//        MultiConfig config = new MultiConfig();
-//        config.setUsername("az");
-//        config.setPassword("az");
-//        MultiClient mc = new MultiClient(); //J'avais la flemme de passer par la procédure standard mais of course ça marche
-//        mc.setMultiConfig(config);
-//        RestoCrous c = MultiHelper.getMenuRu(mc, "Resto U' Médreville");
-//        System.out.println(c.getDateRu());
-//        System.out.println(c.getMenuRu());
-//        System.out.println(c.getImageRu());
-//        System.out.println(c.getNomRu());
+        MultiConfig config = new MultiConfig();
+        config.setUsername("id");
+        config.setPassword("mdp");
+        MultiClient.Builder bd = new MultiClient.Builder();
+        MultiClient mc = bd.build();
+        mc.setMultiConfig(config);
+        RestoCrous c = MultiHelper.getMenuRu(mc, "resto u name");
+        Assertions.assertNotNull(c);
     }
 }
