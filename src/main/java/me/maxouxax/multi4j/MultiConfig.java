@@ -1,5 +1,6 @@
 package me.maxouxax.multi4j;
 
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.BeanAccess;
@@ -61,7 +62,7 @@ public class MultiConfig {
      */
     public static MultiConfig loadConfig(File configFile) {
         if (configFile.exists()) {
-            Yaml yaml = new Yaml(new Constructor(MultiConfig.class));
+            Yaml yaml = new Yaml(new Constructor(MultiConfig.class, new LoaderOptions()));
             yaml.setBeanAccess(BeanAccess.FIELD);
             try {
                 InputStream inputStream = new FileInputStream(configFile);
