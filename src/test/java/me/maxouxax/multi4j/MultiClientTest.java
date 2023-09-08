@@ -1,7 +1,9 @@
 package me.maxouxax.multi4j;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import me.maxouxax.multi4j.crous.CrousRestaurant;
 import me.maxouxax.multi4j.exceptions.MultiLoginException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MultiClientTest {
 
@@ -19,7 +20,7 @@ class MultiClientTest {
 
     @BeforeEach
     void setUp() throws URISyntaxException {
-        String configPath = new URI(getClass().getClassLoader().getResource("config.yml").toString()).getPath();
+        String configPath = new URI(getClass().getClassLoader().getResource("config.properties").toString()).getPath();
         MultiConfig config = MultiConfig.loadConfig(configPath);
         multiClient = new MultiClient.Builder().withMultiConfig(config).build();
     }
@@ -56,11 +57,27 @@ class MultiClientTest {
     void makeGQLRequest() throws MultiLoginException, IOException, URISyntaxException, InterruptedException {
         multiClient.connect();
 
-        JSONObject jsonObject = new JSONObject("""
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson("""
                 {"operationName":"factuel","variables":{},"query":"query factuel {\\n  news {\\n    title\\n    image\\n    date\\n    description\\n    link\\n    __typename\\n  }\\n}\\n"}
-                """);
-        JSONObject response = multiClient.makeGQLRequest(jsonObject);
+                """, JsonObject.class);
+        JsonObject response = multiClient.makeGQLRequest(jsonObject);
         assertTrue(response.has("data"));
+    }
+
+    @Test
+    void crousRestaurants() throws MultiLoginException {
+        multiClient.connect();
+        assertDoesNotThrow(() -> {
+            CrousRestaurant restaurantDetails = MultiHelper.getRestaurantDetails(multiClient, "(S)pace Brabois");
+            assertEquals("(S)pace Brabois", restaurantDetails.getName());
+            System.out.println(restaurantDetails);
+            assertNotNull(restaurantDetails.getThumbnailUrl());
+            assertNotNull(restaurantDetails.getImageUrl());
+            assertNotNull(restaurantDetails.getDescription());
+            assertNotNull(restaurantDetails.getMenus());
+        });
+
     }
 
 }
