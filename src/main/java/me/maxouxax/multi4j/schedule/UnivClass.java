@@ -1,10 +1,10 @@
 package me.maxouxax.multi4j.schedule;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class UnivClass {
@@ -49,17 +49,17 @@ public class UnivClass {
         this.groups = groups;
     }
 
-    public UnivClass(JSONObject event) {
-        this.id = event.getString("id");
-        this.startDateTime = event.getString("startDateTime");
-        this.endDateTime = event.getString("endDateTime");
-        this.day = event.getLong("day");
-        this.duration = event.getInt("duration");
-        this.urls = event.getJSONArray("urls").toList().stream().map(o -> (String) o).toList();
-        this.course = new Course(event.getJSONObject("course"));
-        this.teachers = event.getJSONArray("teachers").toList().stream().map(o -> (HashMap<String, String>) o).map(JSONObject::new).map(Teacher::new).toList();
-        this.rooms = event.getJSONArray("rooms").toList().stream().map(o -> (HashMap<String, String>) o).map(JSONObject::new).map(Room::new).toList();
-        this.groups = event.getJSONArray("groups").toList().stream().map(o -> (HashMap<String, String>) o).map(JSONObject::new).map(Group::new).toList();
+    public UnivClass(JsonObject event) {
+        this.id = event.get("id").getAsString();
+        this.startDateTime = event.get("startDateTime").getAsString();
+        this.endDateTime = event.get("endDateTime").getAsString();
+        this.day = event.get("day").getAsLong();
+        this.duration = event.get("duration").getAsInt();
+        this.urls = event.get("urls").getAsJsonArray().asList().stream().map(JsonElement::getAsString).toList();
+        this.course = new Course(event.get("course").getAsJsonObject());
+        this.teachers = event.get("teachers").getAsJsonArray().asList().stream().map(JsonElement::getAsJsonObject).map(Teacher::new).toList();
+        this.rooms = event.get("rooms").getAsJsonArray().asList().stream().map(JsonElement::getAsJsonObject).map(Room::new).toList();
+        this.groups = event.get("groups").getAsJsonArray().asList().stream().map(JsonElement::getAsJsonObject).map(Group::new).toList();
     }
 
     public String getId() {

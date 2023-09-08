@@ -1,9 +1,9 @@
 package me.maxouxax.multi4j.schedule;
 
+import com.google.gson.JsonObject;
 import me.maxouxax.multi4j.LabelledType;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.json.JSONObject;
 
 public class Course extends LabelledType {
 
@@ -25,8 +25,8 @@ public class Course extends LabelledType {
         this.type = type;
     }
 
-    public Course(JSONObject course) {
-        this(course.getString("id"), course.getString("label"), course.getString("color"), course.optString("url", null), course.getString("type"));
+    public Course(JsonObject course) {
+        this(course.get("id").getAsString(), course.get("label").getAsString(), course.get("color").getAsString(), (course.get("url") == null ? null : course.get("url").getAsString()), course.get("type").getAsString());
     }
 
     public String getId() {

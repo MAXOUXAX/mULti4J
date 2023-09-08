@@ -1,8 +1,8 @@
 package me.maxouxax.multi4j.schedule;
 
+import com.google.gson.JsonObject;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.json.JSONObject;
 
 public class Teacher {
 
@@ -16,9 +16,9 @@ public class Teacher {
         this.email = email;
     }
 
-    public Teacher(JSONObject jsonObject) {
-        this.name = jsonObject.getString("name");
-        this.email = jsonObject.getString("email");
+    public Teacher(JsonObject jsonObject) {
+        this.name = jsonObject.get("name").getAsString();
+        this.email = jsonObject.get("email").getAsString();
     }
 
     public String getName() {

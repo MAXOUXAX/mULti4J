@@ -1,8 +1,9 @@
 package me.maxouxax.multi4j;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import me.maxouxax.multi4j.exceptions.MultiLoginException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -32,6 +33,8 @@ public class MultiClient {
      * @throws MultiLoginException If the login failed
      */
     public void connect() throws MultiLoginException {
+        Gson gson = new Gson();
+
         String authObject = "username=" + multiConfig.getUsername() + "&" +
                 "password=" + URLEncoder.encode(multiConfig.getPassword(), StandardCharsets.UTF_8) + "&";
 
@@ -46,17 +49,17 @@ public class MultiClient {
             throw new MultiLoginException("Unable to get auth ticket, check your credentials");
         }
 
-        JSONObject jsonObject = new JSONObject("{\"operationName\":\"casAuth\",\"variables\":{\"token\":" + authTicket + "},\"query\":\"query casAuth($token: String!) {\\n  casAuth(token: $token)\\n}\\n\"}");
-        JSONObject authToken;
+        JsonObject jsonObject = gson.fromJson("{\"operationName\":\"casAuth\",\"variables\":{\"token\":" + authTicket + "},\"query\":\"query casAuth($token: String!) {\\n  casAuth(token: $token)\\n}\\n\"}", JsonObject.class);
+        JsonObject authToken;
         try {
             authToken = makeGQLRequest(jsonObject);
         } catch (IOException | URISyntaxException | InterruptedException e) {
             throw new MultiLoginException(e);
         }
 
-        JSONArray tokenArray = authToken.getJSONObject("data").getJSONArray("casAuth");
-        this.currentToken = tokenArray.getString(0);
-        this.refreshToken = tokenArray.getString(1);
+        JsonArray tokenArray = authToken.get("data").getAsJsonObject().get("casAuth").getAsJsonArray();
+        this.currentToken = tokenArray.get(0).getAsString();
+        this.refreshToken = tokenArray.get(1).getAsString();
     }
 
     /**
@@ -69,7 +72,7 @@ public class MultiClient {
      * @throws URISyntaxException   If the URI is invalid
      * @throws InterruptedException If the thread is interrupted
      */
-    public JSONObject makeGQLRequest(JSONObject query) throws IOException, URISyntaxException, InterruptedException {
+    public JsonObject makeGQLRequest(JsonObject query) throws IOException, URISyntaxException, InterruptedException {
         URI uri = new URI(multiConfig.getDataUrl() + "/graphql");
 
         HttpRequest.Builder builder = HttpRequest.newBuilder(uri)
@@ -86,7 +89,8 @@ public class MultiClient {
 
         HttpResponse<String> response = httpClient.send(gqlRequest, HttpResponse.BodyHandlers.ofString());
 
-        return new JSONObject(response.body());
+        Gson gson = new Gson();
+        return gson.fromJson(response.body(), JsonObject.class);
     }
 
     /**

@@ -1,9 +1,9 @@
 package me.maxouxax.multi4j.schedule;
 
+import com.google.gson.JsonObject;
 import me.maxouxax.multi4j.LabelledType;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.json.JSONObject;
 
 public class Room extends LabelledType {
 
@@ -12,8 +12,8 @@ public class Room extends LabelledType {
         super(label);
     }
 
-    public Room(JSONObject jsonObject) {
-        super(jsonObject.getString("label"));
+    public Room(JsonObject jsonObject) {
+        super(jsonObject.get("label").getAsString());
     }
 
 }
