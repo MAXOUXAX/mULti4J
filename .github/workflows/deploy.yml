@@ -24,9 +24,13 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
-      - name: Step 4 - Build and deploy
+      - name: Step 4 - Test and verify
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ secrets.GITHUB_USERNAME }}
           PASSWORD: ${{ secrets.GITHUB_PASSWORD }}
-        run: mvn --batch-mode deploy -Dusername=${USERNAME} -Dpassword=${PASSWORD}
+        run: mvn --batch-mode --update-snapshots verify -Dusername=${USERNAME} -Dpassword=${PASSWORD}
+
+      - name: Step 5 - Build and deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn --batch-mode --update-snapshots deploy
