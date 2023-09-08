@@ -69,4 +69,31 @@ public class MultiHelper {
         return univClasses;
     }
 
+    /**
+     * Gets details about a CROUS restaurant
+     *
+     * @param multiClient    The MultiClient instance
+     * @param restaurantName The name of the restaurant
+     * @return The restaurant details
+     * @throws IOException          If an error occurs while sending the request
+     * @throws URISyntaxException   If the URI is not valid
+     * @throws InterruptedException If the thread is interrupted
+     * @throws ParseException       If the parsed date is not valid
+     */
+    public static CrousRestaurant getRestaurantDetails(MultiClient multiClient, String restaurantName) throws IOException, URISyntaxException, InterruptedException, ParseException {
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson("{\"operationName\":\"crous\",\"variables\":{},\"query\":\"query crous {\\n  restos {\\n    title\\n    thumbnail_url\\n    image_url\\n    short_desc\\n    lat\\n    lon\\n    menus {\\n      date\\n      meal {\\n        name\\n        foodcategory {\\n          name\\n          dishes {\\n            name\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}", JsonObject.class);
+        JsonObject response = multiClient.makeGQLRequest(jsonObject);
+
+        JsonArray restosArray = response.get("data").getAsJsonObject().get("restos").getAsJsonArray();
+        JsonObject o = restosArray.asList()
+                .stream()
+                .map(JsonElement::getAsJsonObject)
+                .filter(resto -> resto.get("title").getAsString().equalsIgnoreCase(restaurantName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        return CrousRestaurant.fromJson(o);
+    }
+
 }
