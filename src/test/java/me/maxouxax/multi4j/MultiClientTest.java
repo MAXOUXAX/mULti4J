@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,8 +19,9 @@ class MultiClientTest {
 
     @BeforeEach
     void setUp() throws URISyntaxException {
-        String configPath = new URI(getClass().getClassLoader().getResource("config.properties").toString()).getPath();
-        MultiConfig config = MultiConfig.loadConfig(configPath);
+        MultiConfig config = new MultiConfig();
+        config.setUsername(AppConfig.getUsername());
+        config.setPassword(AppConfig.getPassword());
         multiClient = new MultiClient.Builder().withMultiConfig(config).build();
     }
 
