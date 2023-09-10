@@ -76,7 +76,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/MAXOUXAX/mULti4J</url>
+            <url>https://maven.pkg.github.com/maxouxax/multi4j</url>
         </repository>
     </distributionManagement>
 
