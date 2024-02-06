@@ -6,7 +6,7 @@
 
     <groupId>me.maxouxax</groupId>
     <artifactId>multi4j</artifactId>
-    <version>1.1.0-RELEASE</version>
+    <version>1.1.1-RELEASE</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-            <version>4.9.1</version>
+            <version>4.11.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -61,13 +61,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.2</version>
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
+            <version>2.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

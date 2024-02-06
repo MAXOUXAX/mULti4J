@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MultiHelper {
 
@@ -54,17 +55,19 @@ public class MultiHelper {
 
         ArrayList<UnivClass> univClasses = new ArrayList<>();
 
-        try {
-            JsonObject response = multiClient.makeGQLRequest(jsonObject);
-            JsonObject userPlanning = response.get("data").getAsJsonObject().get("timetable").getAsJsonObject().get("plannings").getAsJsonArray().get(0).getAsJsonObject();
-            userPlanning.get("events").getAsJsonArray().forEach(event -> {
-                UnivClass univClass = new UnivClass((JsonObject) event);
-                univClasses.add(univClass);
-            });
-        } catch (IOException | URISyntaxException | InterruptedException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        JsonObject response = multiClient.makeGQLRequest(jsonObject);
+        JsonArray plannings = response.get("data").getAsJsonObject().get("timetable").getAsJsonObject().get(
+                "plannings").getAsJsonArray();
+        List<JsonElement> userPlannings = plannings.asList().stream().filter(obj -> {
+            JsonObject planning = obj.getAsJsonObject();
+            return planning.get("type").getAsString().equalsIgnoreCase("USER") && !planning.get("events").getAsJsonArray().isEmpty();
+        }).toList();
+
+        JsonObject userPlanning = userPlannings.get(0).getAsJsonObject();
+        userPlanning.get("events").getAsJsonArray().forEach(event -> {
+            UnivClass univClass = new UnivClass((JsonObject) event);
+            univClasses.add(univClass);
+        });
 
         return univClasses;
     }
